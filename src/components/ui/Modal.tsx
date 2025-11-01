@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type ModalProps = {
 	open: boolean;
@@ -10,6 +10,8 @@ type ModalProps = {
 
 export default function Modal({ open, onClose, title, children, footer }: ModalProps) {
 	const panelRef = useRef<HTMLDivElement | null>(null);
+	const [vvh, setVvh] = useState<number>(typeof window !== 'undefined' ? (window.visualViewport?.height ?? window.innerHeight) : 0);
+	const [bottomInset, setBottomInset] = useState<number>(0);
 
 	useEffect(() => {
 		if (!open) return;
@@ -20,6 +22,35 @@ export default function Modal({ open, onClose, title, children, footer }: ModalP
 		return () => document.removeEventListener('keydown', onKey);
 	}, [open, onClose]);
 
+	useEffect(() => {
+		if (!open) return;
+		const vv = window.visualViewport;
+		function update() {
+			const height = vv?.height ?? window.innerHeight;
+			setVvh(height);
+			const inset = Math.max(0, (window.innerHeight - height - (vv?.offsetTop ?? 0)));
+			setBottomInset(inset);
+		}
+		update();
+		vv?.addEventListener('resize', update);
+		vv?.addEventListener('scroll', update);
+		return () => {
+			vv?.removeEventListener('resize', update);
+			vv?.removeEventListener('scroll', update);
+		};
+	}, [open]);
+
+	useEffect(() => {
+		if (!open) return;
+		function onFocusIn(e: FocusEvent) {
+			const target = e.target as HTMLElement;
+			if (!target) return;
+			panelRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+		}
+		document.addEventListener('focusin', onFocusIn);
+		return () => document.removeEventListener('focusin', onFocusIn);
+	}, [open]);
+
 	if (!open) return null;
 
 	return (
@@ -29,9 +60,12 @@ export default function Modal({ open, onClose, title, children, footer }: ModalP
 				onClick={() => onClose()}
 				aria-hidden="true"
 			/>
-			{/* Scrollable container honoring dynamic viewport height with safe-area padding */}
+			{/* Scrollable container honoring dynamic viewport height with safe-area + keyboard insets */}
 			<div className="absolute inset-0 overflow-y-auto">
-				<div className="min-h-[100dvh] flex items-center justify-center p-4 pb-[max(env(safe-area-inset-bottom),1rem)]">
+				<div
+					className="flex items-center justify-center p-4"
+					style={{ minHeight: `${vvh}px`, paddingBottom: `max(${bottomInset}px, 16px)` }}
+				>
 					<div
 						ref={panelRef}
 						role="dialog"
