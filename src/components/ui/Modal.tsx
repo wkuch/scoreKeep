@@ -29,20 +29,23 @@ export default function Modal({ open, onClose, title, children, footer }: ModalP
 				onClick={() => onClose()}
 				aria-hidden="true"
 			/>
-			<div className="absolute inset-0 grid place-items-center p-4">
-				<div
-					ref={panelRef}
-					role="dialog"
-					aria-modal="true"
-					className="w-full max-w-sm overflow-hidden rounded-2xl bg-neutral-900 ring-1 ring-neutral-700 shadow-xl"
-				>
-					{title && (
-						<div className="border-b border-neutral-800 px-5 py-4 text-base font-semibold text-white">
-							{title}
-						</div>
-					)}
-					<div className="px-5 py-4 text-neutral-200">{children}</div>
-					{footer && <div className="flex gap-2 border-t border-neutral-800 px-5 py-4">{footer}</div>}
+			{/* Scrollable container honoring dynamic viewport height with safe-area padding */}
+			<div className="absolute inset-0 overflow-y-auto">
+				<div className="min-h-[100dvh] flex items-center justify-center p-4 pb-[max(env(safe-area-inset-bottom),1rem)]">
+					<div
+						ref={panelRef}
+						role="dialog"
+						aria-modal="true"
+						className="w-full max-w-sm rounded-2xl bg-neutral-900 ring-1 ring-neutral-700 shadow-xl flex flex-col max-h-[90dvh]"
+					>
+						{title && (
+							<div className="border-b border-neutral-800 px-5 py-4 text-base font-semibold text-white">
+								{title}
+							</div>
+						)}
+						<div className="px-5 py-4 text-neutral-200 overflow-y-auto">{children}</div>
+						{footer && <div className="flex gap-2 border-t border-neutral-800 px-5 py-4">{footer}</div>}
+					</div>
 				</div>
 			</div>
 		</div>
