@@ -6,6 +6,9 @@ type Action =
 	| { type: 'add'; name: string }
 	| { type: 'inc'; id: string }
 	| { type: 'dec'; id: string }
+	| { type: 'remove'; id: string }
+	| { type: 'reset'; id: string }
+	| { type: 'rename'; id: string; name: string }
 	| { type: 'resetAll' };
 
 type PlayersContextValue = {
@@ -47,6 +50,23 @@ function playersReducer(state: AppState, action: Action): AppState {
 		}
 		case 'resetAll': {
 			return { ...state, players: state.players.map((p) => ({ ...p, score: 0 })) };
+		}
+		case 'remove': {
+			return { ...state, players: state.players.filter((p) => p.id !== action.id) };
+		}
+		case 'reset': {
+			return {
+				...state,
+				players: state.players.map((p) => (p.id === action.id ? { ...p, score: 0 } : p)),
+			};
+		}
+		case 'rename': {
+			const newName = action.name.trim();
+			if (!newName) return state;
+			return {
+				...state,
+				players: state.players.map((p) => (p.id === action.id ? { ...p, name: newName } : p)),
+			};
 		}
 		default:
 			return state;
