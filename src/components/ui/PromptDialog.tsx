@@ -1,0 +1,64 @@
+import { useEffect, useRef, useState } from 'react';
+import Modal from './Modal';
+
+type PromptDialogProps = {
+	open: boolean;
+	title: string;
+	label?: string;
+	initialValue?: string;
+	confirmText?: string;
+	cancelText?: string;
+	onConfirm: (value: string) => void;
+	onClose: () => void;
+};
+
+export default function PromptDialog({ open, title, label, initialValue = '', confirmText = 'Save', cancelText = 'Cancel', onConfirm, onClose }: PromptDialogProps) {
+	const [value, setValue] = useState(initialValue);
+	const inputRef = useRef<HTMLInputElement | null>(null);
+
+	useEffect(() => {
+		if (open) {
+			setValue(initialValue);
+			setTimeout(() => inputRef.current?.focus(), 0);
+		}
+	}, [open, initialValue]);
+
+	return (
+		<Modal
+			open={open}
+			onClose={onClose}
+			title={title}
+			footer={
+				<>
+					<button className="flex-1 rounded-lg bg-neutral-800 px-4 py-3 text-white ring-1 ring-neutral-700" onClick={onClose}>
+						{cancelText}
+					</button>
+					<button
+						className="flex-1 rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white"
+						onClick={() => {
+							const trimmed = value.trim();
+							if (!trimmed) return;
+							onConfirm(trimmed);
+							onClose();
+						}}
+					>
+						{confirmText}
+					</button>
+				</>
+			}
+		>
+			<div className="space-y-2">
+				{label && <label className="block text-sm text-neutral-300">{label}</label>}
+				<input
+					ref={inputRef}
+					type="text"
+					value={value}
+					onChange={(e) => setValue(e.target.value)}
+					className="w-full rounded-lg bg-neutral-800 px-3 py-3 text-base text-white outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+				/>
+			</div>
+		</Modal>
+	);
+}
+
+

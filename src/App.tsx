@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import AddPlayer from './components/AddPlayer';
 import PlayerRow from './components/PlayerRow';
 import { PlayersProvider, usePlayers } from './store/PlayersProvider';
+import ConfirmDialog from './components/ui/ConfirmDialog';
 
 function Content() {
 	const { state, dispatch } = usePlayers();
+	const [showResetAll, setShowResetAll] = useState(false);
 	return (
 		<div className="mx-auto flex min-h-screen max-w-md flex-col gap-4 px-4 py-6">
 			<header className="flex items-center justify-between">
@@ -22,15 +25,19 @@ function Content() {
 			<footer className="sticky bottom-0 mt-auto bg-neutral-900 py-4">
 				<button
 					className="w-full rounded-xl bg-neutral-800 px-4 py-4 text-base font-semibold text-white ring-1 ring-neutral-700 active:scale-95"
-					onClick={() => {
-						if (confirm('Reset all scores to 0?')) {
-							dispatch({ type: 'resetAll' });
-						}
-					}}
+					onClick={() => setShowResetAll(true)}
 				>
 					Reset All
 				</button>
 			</footer>
+			<ConfirmDialog
+				open={showResetAll}
+				title="Reset all scores"
+				description="Reset every player's score to 0?"
+				confirmText="Reset"
+				onConfirm={() => dispatch({ type: 'resetAll' })}
+				onClose={() => setShowResetAll(false)}
+			/>
 		</div>
 	);
 }

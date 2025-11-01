@@ -2,12 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import type { Player } from '../types';
 import { usePlayers } from '../store/PlayersProvider';
 import { MoreVertical } from 'lucide-react';
+import ConfirmDialog from './ui/ConfirmDialog';
+import PromptDialog from './ui/PromptDialog';
 
 export default function PlayerRow({ player }: { player: Player }) {
 	const { dispatch } = usePlayers();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement | null>(null);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
+	const [showDelete, setShowDelete] = useState(false);
+	const [showReset, setShowReset] = useState(false);
+	const [showRename, setShowRename] = useState(false);
 
 	useEffect(() => {
 		if (!menuOpen) return;
@@ -21,24 +26,9 @@ export default function PlayerRow({ player }: { player: Player }) {
 		return () => document.removeEventListener('mousedown', onDocClick);
 	}, [menuOpen]);
 
-	function confirmDelete() {
-		if (confirm(`Remove ${player.name}?`)) {
-			dispatch({ type: 'remove', id: player.id });
-		}
-	}
-
-	function resetScore() {
-		if (confirm(`Reset score for ${player.name}?`)) {
-			dispatch({ type: 'reset', id: player.id });
-		}
-	}
-
-	function renamePlayer() {
-		const result = prompt('Rename player', player.name);
-		if (result == null) return;
-		const trimmed = result.trim();
-		if (!trimmed || trimmed === player.name) return;
-		dispatch({ type: 'rename', id: player.id, name: trimmed });
+	function handleRename(value: string) {
+		if (!value || value === player.name) return;
+		dispatch({ type: 'rename', id: player.id, name: value });
 	}
 
 	return (
@@ -67,7 +57,7 @@ export default function PlayerRow({ player }: { player: Player }) {
 							role="menuitem"
 							onClick={() => {
 								setMenuOpen(false);
-								resetScore();
+								setShowReset(true);
 							}}
 						>
 							Reset score
@@ -77,7 +67,7 @@ export default function PlayerRow({ player }: { player: Player }) {
 							role="menuitem"
 							onClick={() => {
 								setMenuOpen(false);
-								renamePlayer();
+								setShowRename(true);
 							}}
 						>
 							Rename
@@ -87,7 +77,7 @@ export default function PlayerRow({ player }: { player: Player }) {
 							role="menuitem"
 							onClick={() => {
 								setMenuOpen(false);
-								confirmDelete();
+								setShowDelete(true);
 							}}
 						>
 							Delete
@@ -95,6 +85,31 @@ export default function PlayerRow({ player }: { player: Player }) {
 					</div>
 				)}
 			</div>
+			<ConfirmDialog
+				open={showDelete}
+				title="Delete player"
+				description={`Are you sure you want to delete ${player.name}?`}
+				confirmText="Delete"
+				onConfirm={() => dispatch({ type: 'remove', id: player.id })}
+				onClose={() => setShowDelete(false)}
+			/>
+			<ConfirmDialog
+				open={showReset}
+				title="Reset score"
+				description={`Reset ${player.name}'s score to 0?`}
+				confirmText="Reset"
+				onConfirm={() => dispatch({ type: 'reset', id: player.id })}
+				onClose={() => setShowReset(false)}
+			/>
+			<PromptDialog
+				open={showRename}
+				title="Rename player"
+				label="Name"
+				initialValue={player.name}
+				confirmText="Save"
+				onConfirm={handleRename}
+				onClose={() => setShowRename(false)}
+			/>
 			<div className="min-w-0">
 				<div className="truncate text-base font-semibold text-white">{player.name}</div>
 				<div className="text-sm text-neutral-400">Score</div>
