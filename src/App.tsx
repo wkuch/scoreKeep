@@ -22,7 +22,11 @@ function Content() {
 			<footer className="sticky bottom-0 mt-auto bg-neutral-900 py-4">
 				<button
 					className="w-full rounded-xl bg-neutral-800 px-4 py-4 text-base font-semibold text-white ring-1 ring-neutral-700 active:scale-95"
-					onClick={() => dispatch({ type: 'resetAll' })}
+					onClick={() => {
+						if (confirm('Reset all scores to 0?')) {
+							dispatch({ type: 'resetAll' });
+						}
+					}}
 				>
 					Reset All
 				</button>
