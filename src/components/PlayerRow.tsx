@@ -160,11 +160,11 @@ const isRevealed = Boolean(player.revealed);
 			)}
 		</div>
 			<div className="flex items-center gap-2 ml-4">
-				<button className="btn h-12 w-12 text-2xl font-bold active:scale-95" onClick={() => dispatch({ type: 'dec', id: player.id })}>-</button>
-				<button className="btn h-12 w-12 text-2xl font-bold active:scale-95" onClick={() => dispatch({ type: 'inc', id: player.id })}>+</button>
+				<button className="btn grid place-items-center h-12 w-12 text-2xl leading-none font-bold active:scale-95" onClick={() => dispatch({ type: 'dec', id: player.id })}>-</button>
+				<button className="btn grid place-items-center h-12 w-12 text-2xl leading-none font-bold active:scale-95" onClick={() => dispatch({ type: 'inc', id: player.id })}>+</button>
 				{hide ? (
 					<button
-						className={`h-12 w-12 text-sm font-semibold active:scale-95 ` + (pending !== 0 ? 'btn' : 'opacity-0 pointer-events-none')}
+						className={`grid place-items-center h-12 w-12 text-sm font-semibold active:scale-95 ` + (pending !== 0 ? 'btn' : 'opacity-0 pointer-events-none')}
 						onClick={() => pending !== 0 && dispatch({ type: 'applyPending', id: player.id })}
 						title="Apply pending"
 						aria-hidden={pending === 0}

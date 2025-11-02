@@ -13,10 +13,10 @@
         try {
           var key = 'scorekeep:theme';
           var saved = localStorage.getItem(key);
-          var next = saved || 'retro';
+          var next = saved || 'modern';
           document.documentElement.setAttribute('data-theme', next);
         } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'retro');
+          document.documentElement.setAttribute('data-theme', 'modern');
         }
       })();
     </script>

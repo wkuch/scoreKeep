@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import { applyTheme, getCurrentThemeAttr, type ThemeId } from '../../theme';
+import { Check } from 'lucide-react';
 
 type OptionsDialogProps = {
 	open: boolean;
@@ -26,21 +27,21 @@ export default function OptionsDialog({ open, onClose }: OptionsDialogProps) {
 				<section>
 					<h2 className="mb-2 text-sm font-semibold text-muted">Theme</h2>
 					<div className="space-y-2">
-						{THEMES.map((t) => (
-							<label key={t} className="flex items-center gap-2">
-								<input
-									type="radio"
-									name="theme"
-									value={t}
-									checked={theme === t}
-									onChange={() => {
-										setTheme(t);
-										applyTheme(t);
-									}}
-								/>
-								<span className="capitalize">{t}</span>
-							</label>
-						))}
+						{THEMES.map((t) => {
+							const active = theme === t;
+							return (
+								<button
+									key={t}
+									type="button"
+									className={`w-full flex items-center justify-between rounded-token border px-3 py-3 text-left bg-surface ${active ? 'border-accent' : 'border-app'}`}
+									onClick={() => { setTheme(t); applyTheme(t); }}
+									aria-pressed={active}
+								>
+									<span className="capitalize text-app">{t}</span>
+									{active ? <Check size={18} className="text-accent" /> : null}
+								</button>
+							);
+						})}
 					</div>
 				</section>
 			</div>

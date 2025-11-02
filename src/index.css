@@ -18,7 +18,9 @@ html, body, #root {
 	.bg-surface { background-color: var(--app-surface); }
 	.text-app { color: var(--app-text); }
 	.text-muted { color: var(--muted); }
+	.text-accent { color: var(--accent); }
 	.border-app { border-color: var(--border-color); }
+	.border-accent { border-color: var(--accent); }
 	.rounded-token { border-radius: var(--radius); }
 
 	.card {

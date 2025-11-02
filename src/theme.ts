@@ -24,7 +24,7 @@ export function applyTheme(id: ThemeId): void {
 	}
 }
 
-export function initTheme(defaultTheme: ThemeId = 'retro'): void {
+export function initTheme(defaultTheme: ThemeId = 'modern'): void {
 	const saved = getSavedTheme();
 	const next = saved ?? defaultTheme;
 	document.documentElement.setAttribute('data-theme', next);
