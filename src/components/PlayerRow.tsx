@@ -127,7 +127,7 @@ const isRevealed = Boolean(player.revealed);
 			<div className="truncate text-base font-semibold text-app">{player.name}</div>
 			{hide && pending !== 0 && (
 				<div className="mt-1 text-sm text-muted">
-					<span className={pending > 0 ? 'text-green-400' : 'text-red-400'}>
+					<span className={pending > 0 ? 'text-positive' : 'text-negative'}>
 						{pending > 0 ? `+${pending}` : pending}
 					</span>
 				</div>

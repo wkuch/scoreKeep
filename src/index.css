@@ -19,6 +19,8 @@ html, body, #root {
 	.text-app { color: var(--app-text); }
 	.text-muted { color: var(--muted); }
 	.text-accent { color: var(--accent); }
+	.text-positive { color: var(--positive); }
+	.text-negative { color: var(--negative); }
 	.border-app { border-color: var(--border-color); }
 	.border-accent { border-color: var(--accent); }
 	.rounded-token { border-radius: var(--radius); }

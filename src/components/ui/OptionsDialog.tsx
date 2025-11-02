@@ -8,7 +8,7 @@ type OptionsDialogProps = {
 	onClose: () => void;
 };
 
-const THEMES: ThemeId[] = ['retro', 'modern'];
+const THEMES: ThemeId[] = ['retro', 'modern', 'sunset', 'neon', 'paper'];
 
 export default function OptionsDialog({ open, onClose }: OptionsDialogProps) {
 	const [theme, setTheme] = useState<ThemeId>('retro');

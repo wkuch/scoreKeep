@@ -1,4 +1,4 @@
-export type ThemeId = 'retro' | 'modern';
+export type ThemeId = 'retro' | 'modern' | 'sunset' | 'neon' | 'paper';
 
 const STORAGE_KEY = 'scorekeep:theme';
 
