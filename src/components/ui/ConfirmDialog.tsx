@@ -18,14 +18,11 @@ export default function ConfirmDialog({ open, title, description, confirmText = 
 			title={title}
 			footer={
 				<>
-					<button
-						className="flex-1 rounded-lg bg-neutral-800 px-4 py-3 text-white ring-1 ring-neutral-700"
-						onClick={onClose}
-					>
+					<button className="btn flex-1 px-4 py-3" onClick={onClose}>
 						{cancelText}
 					</button>
 					<button
-						className="flex-1 rounded-lg bg-red-600 px-4 py-3 font-semibold text-white"
+						className="btn flex-1 px-4 py-3 font-semibold"
 						onClick={() => {
 							onConfirm();
 							onClose();
@@ -36,7 +33,7 @@ export default function ConfirmDialog({ open, title, description, confirmText = 
 				</>
 			}
 		>
-			{description && <p className="text-sm text-neutral-300">{description}</p>}
+			{description && <p className="text-sm text-muted">{description}</p>}
 		</Modal>
 	);
 }

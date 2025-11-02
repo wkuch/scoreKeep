@@ -70,15 +70,15 @@ export default function Modal({ open, onClose, title, children, footer }: ModalP
 						ref={panelRef}
 						role="dialog"
 						aria-modal="true"
-						className="w-full max-w-sm rounded-2xl bg-neutral-900 ring-1 ring-neutral-700 shadow-xl flex flex-col max-h-[90dvh]"
+						className="w-full max-w-sm rounded-[var(--radius)] bg-surface ring-1 ring-[var(--border-color)] shadow-xl flex flex-col max-h-[90dvh]"
 					>
 						{title && (
-							<div className="border-b border-neutral-800 px-5 py-4 text-base font-semibold text-white">
+							<div className="border-b border-[var(--border-color)] px-5 py-4 text-base font-semibold text-app">
 								{title}
 							</div>
 						)}
-						<div className="px-5 py-4 text-neutral-200 overflow-y-auto">{children}</div>
-						{footer && <div className="flex gap-2 border-t border-neutral-800 px-5 py-4">{footer}</div>}
+						<div className="px-5 py-4 text-app overflow-y-auto">{children}</div>
+						{footer && <div className="flex gap-2 border-t border-[var(--border-color)] px-5 py-4">{footer}</div>}
 					</div>
 				</div>
 			</div>

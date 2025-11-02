@@ -18,7 +18,7 @@ export default function AddPlayer() {
 				type="text"
 				inputMode="text"
 				placeholder="Add player"
-				className="flex-1 rounded-lg bg-neutral-800 px-3 py-3 text-base placeholder-neutral-400 outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+				className="input flex-1 px-3 py-3 text-base outline-none"
 				value={name}
 				onChange={(e) => setName(e.target.value)}
 				onKeyDown={(e) => {
@@ -26,7 +26,7 @@ export default function AddPlayer() {
 				}}
 			/>
 			<button
-				className="rounded-lg bg-indigo-600 px-4 py-3 text-base font-semibold text-white active:scale-95"
+				className="btn px-4 py-3 text-base font-semibold active:scale-95"
 				onClick={submit}
 			>
 				Add

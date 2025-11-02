@@ -30,11 +30,11 @@ export default function PromptDialog({ open, title, label, initialValue = '', co
 			title={title}
 			footer={
 				<>
-					<button className="flex-1 rounded-lg bg-neutral-800 px-4 py-3 text-white ring-1 ring-neutral-700" onClick={onClose}>
+					<button className="btn flex-1 px-4 py-3" onClick={onClose}>
 						{cancelText}
 					</button>
 					<button
-						className="flex-1 rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white"
+						className="btn flex-1 px-4 py-3 font-semibold"
 						onClick={() => {
 							const trimmed = value.trim();
 							if (!trimmed) return;
@@ -48,13 +48,13 @@ export default function PromptDialog({ open, title, label, initialValue = '', co
 			}
 		>
 			<div className="space-y-2">
-				{label && <label className="block text-sm text-neutral-300">{label}</label>}
+				{label && <label className="block text-sm text-muted">{label}</label>}
 				<input
 					ref={inputRef}
 					type="text"
 					value={value}
 					onChange={(e) => setValue(e.target.value)}
-					className="w-full rounded-lg bg-neutral-800 px-3 py-3 text-base text-white outline-none ring-1 ring-neutral-700 focus:ring-indigo-500"
+					className="input w-full px-3 py-3 text-base outline-none"
 				/>
 			</div>
 		</Modal>

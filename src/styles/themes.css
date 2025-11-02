@@ -1,0 +1,60 @@
+/* Design tokens and theme variants */
+
+/* Fallback tokens (used before JS sets the theme) */
+:root {
+	--app-bg: #0a0a0a;
+	--app-surface: #151515;
+	--app-text: #ffffff;
+	--accent: #7c5cff;
+	--muted: #9ca3af;
+	--border-color: #2a2a2a;
+	--radius: 14px;
+	--shadow-card: 0 6px 24px rgba(0, 0, 0, 0.35);
+	--font-ui: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+}
+
+/* Modern */
+[data-theme="modern"] {
+	--app-bg: #0a0a0a;
+	--app-surface: #151515;
+	--app-text: #ffffff;
+	--accent: #7c5cff;
+	--muted: #9ca3af;
+	--border-color: #2a2a2a;
+	--radius: 14px;
+	--shadow-card: 0 6px 24px rgba(0, 0, 0, 0.35);
+	--font-ui: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+}
+
+/* Retro */
+[data-theme="retro"] {
+	--app-bg: #0b0f0a;
+	--app-surface: #0b140d;
+	--app-text: #b6fcb6;
+	--accent: #1fd87a;
+	--muted: #86c986;
+	--border-color: rgba(31, 216, 122, 0.5);
+	--radius: 0px;
+	--shadow-card: 0 0 24px rgba(31, 216, 122, 0.15);
+	--font-ui: 'VT323', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+/* Retro CRT scanlines flourish */
+[data-theme="retro"] body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	background: repeating-linear-gradient(
+		to bottom,
+		rgba(255, 255, 255, 0.05) 0,
+		rgba(255, 255, 255, 0.05) 1px,
+		transparent 3px,
+		transparent 4px
+	);
+	mix-blend-mode: overlay;
+	opacity: 0.25;
+	z-index: 2147483647;
+}
+
+
