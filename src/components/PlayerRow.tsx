@@ -37,7 +37,7 @@ const hide = state.hideTotals;
 const isRevealed = Boolean(player.revealed);
 
 	return (
-		<div className="relative grid grid-cols-[auto_1fr_6ch_auto] items-center gap-3 card p-3">
+		<div className="relative grid grid-cols-[auto_1fr_5ch_auto] md:grid-cols-[auto_1fr_6ch_auto] items-center gap-3 card p-3">
 			<div className="relative">
 				<button
 					ref={buttonRef}
@@ -133,7 +133,7 @@ const isRevealed = Boolean(player.revealed);
 				</div>
 			)}
 		</div>
-		<div className="justify-self-end text-right text-2xl font-bold tabular-nums text-app w-[6ch]">
+		<div className="justify-self-end text-right text-2xl font-bold tabular-nums text-app w-[5ch] md:w-[6ch]">
 			{hide && !isRevealed ? (
 				<button
 					className="inline-grid place-items-center text-muted hover:text-app"
