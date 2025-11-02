@@ -1,18 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Player } from '../types';
 import { usePlayers } from '../store/PlayersProvider';
-import { MoreVertical } from 'lucide-react';
+import { MoreVertical, Eye } from 'lucide-react';
 import ConfirmDialog from './ui/ConfirmDialog';
 import PromptDialog from './ui/PromptDialog';
 
 export default function PlayerRow({ player }: { player: Player }) {
-	const { dispatch } = usePlayers();
+	const { dispatch, state } = usePlayers();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement | null>(null);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
 	const [showDelete, setShowDelete] = useState(false);
 	const [showReset, setShowReset] = useState(false);
 	const [showRename, setShowRename] = useState(false);
+	const [showReveal, setShowReveal] = useState(false);
 
 	useEffect(() => {
 		if (!menuOpen) return;
@@ -31,8 +32,12 @@ export default function PlayerRow({ player }: { player: Player }) {
 		dispatch({ type: 'rename', id: player.id, name: value });
 	}
 
+const pending = player.pendingDelta ?? 0;
+const hide = state.hideTotals;
+const isRevealed = Boolean(player.revealed);
+
 	return (
-		<div className="relative grid grid-cols-[auto_1fr_auto_auto] items-center gap-3 rounded-xl bg-neutral-800 p-3 ring-1 ring-neutral-700">
+		<div className="relative grid grid-cols-[auto_1fr_6ch_auto] items-center gap-3 rounded-xl bg-neutral-800 p-3 ring-1 ring-neutral-700">
 			<div className="relative">
 				<button
 					ref={buttonRef}
@@ -101,6 +106,14 @@ export default function PlayerRow({ player }: { player: Player }) {
 				onConfirm={() => dispatch({ type: 'reset', id: player.id })}
 				onClose={() => setShowReset(false)}
 			/>
+		<ConfirmDialog
+				open={showReveal}
+				title="Reveal total score"
+			description="Reveal this player's score?"
+				confirmText="Reveal"
+			onConfirm={() => dispatch({ type: 'revealOne', id: player.id })}
+				onClose={() => setShowReveal(false)}
+			/>
 			<PromptDialog
 				open={showRename}
 				title="Rename player"
@@ -110,12 +123,43 @@ export default function PlayerRow({ player }: { player: Player }) {
 				onConfirm={handleRename}
 				onClose={() => setShowRename(false)}
 			/>
-			<div className="min-w-0">
-				<div className="truncate text-base font-semibold text-white">{player.name}</div>
-				<div className="text-sm text-neutral-400">Score</div>
-			</div>
-			<div className="w-16 text-right text-2xl font-bold tabular-nums text-white">{player.score}</div>
-			<div className="flex gap-2">
+		<div className="min-w-0 pr-2">
+			<div className="truncate text-base font-semibold text-white">{player.name}</div>
+			{hide && pending !== 0 && (
+				<div className="mt-1 text-sm text-neutral-400">
+					<span className={pending > 0 ? 'text-green-400' : 'text-red-400'}>
+						{pending > 0 ? `+${pending}` : pending}
+					</span>
+				</div>
+			)}
+		</div>
+		<div className="justify-self-end text-right text-2xl font-bold tabular-nums text-white w-[6ch]">
+			{hide && !isRevealed ? (
+				<button
+					className="inline-grid place-items-center text-neutral-400 hover:text-white"
+					onClick={() => {
+						setShowReset(false);
+						setShowRename(false);
+						setShowDelete(false);
+						setMenuOpen(false);
+						setShowReveal(true);
+					}}
+					title="Reveal total score"
+				>
+					<Eye size={22} />
+				</button>
+			) : (
+				<span
+					className={hide ? 'cursor-pointer hover:text-neutral-300' : undefined}
+					onClick={() => {
+						if (hide) dispatch({ type: 'hideOne', id: player.id });
+					}}
+				>
+					{player.score}
+				</span>
+			)}
+		</div>
+			<div className="flex items-center gap-2 ml-4">
 				<button
 					className="h-12 w-12 rounded-lg bg-neutral-900 text-2xl font-bold text-white ring-1 ring-neutral-700 active:scale-95"
 					onClick={() => dispatch({ type: 'dec', id: player.id })}
@@ -128,6 +172,23 @@ export default function PlayerRow({ player }: { player: Player }) {
 				>
 					+
 				</button>
+				{hide ? (
+					<button
+						className={
+							`h-12 w-12 rounded-lg text-sm font-semibold active:scale-95 ` +
+							(pending !== 0
+								? 'bg-neutral-800 text-white ring-1 ring-neutral-700'
+								: 'opacity-0 pointer-events-none bg-transparent')
+						}
+						onClick={() => pending !== 0 && dispatch({ type: 'applyPending', id: player.id })}
+						title="Apply pending"
+						aria-hidden={pending === 0}
+					>
+						{pending > 0 ? `+${pending}` : pending}
+					</button>
+				) : (
+					<button className="h-12 w-12 rounded-lg opacity-0 pointer-events-none" aria-hidden="true">+0</button>
+				)}
 			</div>
 		</div>
 	);

@@ -1,4 +1,4 @@
-import type { AppState } from './types';
+import type { AppState, Player } from './types';
 
 const STORAGE_KEY = 'scorekeep:v1';
 
@@ -6,9 +6,17 @@ export function loadState(): AppState | undefined {
 	try {
 		const raw = localStorage.getItem(STORAGE_KEY);
 		if (!raw) return undefined;
-		const parsed = JSON.parse(raw) as AppState;
+		const parsed = JSON.parse(raw) as Partial<AppState>;
 		if (!parsed || !Array.isArray(parsed.players)) return undefined;
-		return parsed;
+		const players: Player[] = parsed.players.map((p: any) => ({
+			id: p.id,
+			name: p.name,
+			score: typeof p.score === 'number' ? p.score : 0,
+			createdAt: typeof p.createdAt === 'number' ? p.createdAt : Date.now(),
+			pendingDelta: typeof p.pendingDelta === 'number' ? p.pendingDelta : 0,
+			revealed: Boolean(p.revealed),
+		}));
+		return { players, hideTotals: Boolean((parsed as any).hideTotals) };
 	} catch {
 		return undefined;
 	}

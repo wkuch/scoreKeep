@@ -7,6 +7,7 @@ import ConfirmDialog from './components/ui/ConfirmDialog';
 function Content() {
 	const { state, dispatch } = usePlayers();
 	const [showResetAll, setShowResetAll] = useState(false);
+	const [showRevealAll, setShowRevealAll] = useState(false);
 	return (
 		<div className="mx-auto flex min-h-screen max-w-md flex-col gap-4 px-4 py-6">
 			<header className="flex items-center justify-between">
@@ -22,7 +23,19 @@ function Content() {
 					state.players.map((p) => <PlayerRow key={p.id} player={p} />)
 				)}
 			</div>
-			<footer className="sticky bottom-0 mt-auto bg-neutral-900 py-4">
+			<footer className="sticky bottom-0 mt-auto bg-neutral-900 space-y-3 py-4">
+				<button
+					className="w-full rounded-xl bg-neutral-800 px-4 py-4 text-base font-semibold text-white ring-1 ring-neutral-700 active:scale-95"
+					onClick={() => {
+						if (state.hideTotals) {
+							setShowRevealAll(true);
+						} else {
+							dispatch({ type: 'toggleHideTotals' });
+						}
+					}}
+				>
+					{state.hideTotals ? 'Show total score' : 'Hide total score'}
+				</button>
 				<button
 					className="w-full rounded-xl bg-neutral-800 px-4 py-4 text-base font-semibold text-white ring-1 ring-neutral-700 active:scale-95"
 					onClick={() => setShowResetAll(true)}
@@ -37,6 +50,14 @@ function Content() {
 				confirmText="Reset"
 				onConfirm={() => dispatch({ type: 'resetAll' })}
 				onClose={() => setShowResetAll(false)}
+			/>
+			<ConfirmDialog
+				open={showRevealAll}
+				title="Reveal all scores"
+				description="Show every player's total score?"
+				confirmText="Reveal"
+				onConfirm={() => dispatch({ type: 'toggleHideTotals' })}
+				onClose={() => setShowRevealAll(false)}
 			/>
 		</div>
 	);
