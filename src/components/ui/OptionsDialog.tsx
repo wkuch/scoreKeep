@@ -44,6 +44,12 @@ export default function OptionsDialog({ open, onClose }: OptionsDialogProps) {
 						})}
 					</div>
 				</section>
+				<section>
+					<h2 className="mb-2 text-sm font-semibold text-muted">Tips</h2>
+					<p className="text-sm text-muted">
+						Press and hold + or − on a player to add or subtract a larger amount at once.
+					</p>
+				</section>
 			</div>
 		</Modal>
 	);

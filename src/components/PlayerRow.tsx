@@ -4,6 +4,8 @@ import { usePlayers } from '../store/PlayersProvider';
 import { MoreVertical, Eye } from 'lucide-react';
 import ConfirmDialog from './ui/ConfirmDialog';
 import PromptDialog from './ui/PromptDialog';
+import AmountDialog from './ui/AmountDialog';
+import useLongPress from '../hooks/useLongPress';
 
 export default function PlayerRow({ player }: { player: Player }) {
 	const { dispatch, state } = usePlayers();
@@ -14,6 +16,9 @@ export default function PlayerRow({ player }: { player: Player }) {
 	const [showReset, setShowReset] = useState(false);
 	const [showRename, setShowRename] = useState(false);
 	const [showReveal, setShowReveal] = useState(false);
+	const [amountSign, setAmountSign] = useState<1 | -1 | null>(null);
+	const incPress = useLongPress(() => setAmountSign(1), () => dispatch({ type: 'inc', id: player.id }));
+	const decPress = useLongPress(() => setAmountSign(-1), () => dispatch({ type: 'dec', id: player.id }));
 
 	useEffect(() => {
 		if (!menuOpen) return;
@@ -123,6 +128,13 @@ const isRevealed = Boolean(player.revealed);
 				onConfirm={handleRename}
 				onClose={() => setShowRename(false)}
 			/>
+			<AmountDialog
+				open={amountSign !== null}
+				sign={amountSign ?? 1}
+				playerName={player.name}
+				onConfirm={(amount) => dispatch({ type: 'addAmount', id: player.id, amount })}
+				onClose={() => setAmountSign(null)}
+			/>
 		<div className="min-w-0 pr-2">
 			<div className="truncate text-base font-semibold text-app">{player.name}</div>
 			{hide && pending !== 0 && (
@@ -160,8 +172,8 @@ const isRevealed = Boolean(player.revealed);
 			)}
 		</div>
 			<div className="flex items-center gap-2 ml-4">
-				<button className="btn grid place-items-center h-12 w-12 text-2xl leading-none font-bold active:scale-95" onClick={() => dispatch({ type: 'dec', id: player.id })}>-</button>
-				<button className="btn grid place-items-center h-12 w-12 text-2xl leading-none font-bold active:scale-95" onClick={() => dispatch({ type: 'inc', id: player.id })}>+</button>
+				<button className="btn grid place-items-center h-12 w-12 text-2xl leading-none font-bold active:scale-95 select-none touch-manipulation [-webkit-touch-callout:none]" title="Tap: −1 · Hold: subtract more" {...decPress}>-</button>
+				<button className="btn grid place-items-center h-12 w-12 text-2xl leading-none font-bold active:scale-95 select-none touch-manipulation [-webkit-touch-callout:none]" title="Tap: +1 · Hold: add more" {...incPress}>+</button>
 				{hide ? (
 					<button
 						className={`grid place-items-center h-12 w-12 text-sm font-semibold active:scale-95 ` + (pending !== 0 ? 'btn' : 'opacity-0 pointer-events-none')}

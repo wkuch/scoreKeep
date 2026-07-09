@@ -6,6 +6,7 @@ type Action =
 	| { type: 'add'; name: string }
 	| { type: 'inc'; id: string }
 	| { type: 'dec'; id: string }
+	| { type: 'addAmount'; id: string; amount: number }
 	| { type: 'remove'; id: string }
 	| { type: 'reset'; id: string }
 	| { type: 'rename'; id: string; name: string }
@@ -27,6 +28,21 @@ function createInitialState(): AppState {
 	return fromStorage ?? { players: [], hideTotals: false };
 }
 
+function addToPlayer(state: AppState, id: string, amount: number): AppState {
+	if (state.hideTotals) {
+		return {
+			...state,
+			players: state.players.map((p) =>
+				p.id === id ? { ...p, pendingDelta: (p.pendingDelta ?? 0) + amount } : p
+			),
+		};
+	}
+	return {
+		...state,
+		players: state.players.map((p) => (p.id === id ? { ...p, score: p.score + amount } : p)),
+	};
+}
+
 function playersReducer(state: AppState, action: Action): AppState {
 	switch (action.type) {
 		case 'add': {
@@ -42,32 +58,13 @@ function playersReducer(state: AppState, action: Action): AppState {
 			return { ...state, players: [...state.players, player] };
 		}
 		case 'inc': {
-			if (state.hideTotals) {
-				return {
-					...state,
-					players: state.players.map((p) =>
-						p.id === action.id ? { ...p, pendingDelta: (p.pendingDelta ?? 0) + 1 } : p
-					),
-				};
-			}
-			return {
-				...state,
-				players: state.players.map((p) => (p.id === action.id ? { ...p, score: p.score + 1 } : p)),
-			};
+			return addToPlayer(state, action.id, 1);
 		}
 		case 'dec': {
-			if (state.hideTotals) {
-				return {
-					...state,
-					players: state.players.map((p) =>
-						p.id === action.id ? { ...p, pendingDelta: (p.pendingDelta ?? 0) - 1 } : p
-					),
-				};
-			}
-			return {
-				...state,
-				players: state.players.map((p) => (p.id === action.id ? { ...p, score: p.score - 1 } : p)),
-			};
+			return addToPlayer(state, action.id, -1);
+		}
+		case 'addAmount': {
+			return addToPlayer(state, action.id, action.amount);
 		}
 		case 'resetAll': {
 			return { ...state, players: state.players.map((p) => ({ ...p, score: 0, pendingDelta: 0 })) };

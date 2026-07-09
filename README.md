@@ -5,6 +5,7 @@ Minimal, mobile‑first scorekeeper for in‑person games.
 ## Features
 - Add, rename, delete players
 - Increment/decrement and reset per player; reset all
+- Long-press + or − for larger amounts (quick picks 5/10/20/50 or a custom value)
 - Hide totals mode with per‑player pending deltas and per‑player reveal
 - Theme switcher
 - State persisted in localStorage
