@@ -137,7 +137,7 @@ const isRevealed = Boolean(player.revealed);
 			/>
 		<div className="min-w-0 pr-2">
 			<div className="truncate text-base font-semibold text-app">{player.name}</div>
-			{hide && pending !== 0 && (
+			{pending !== 0 && (
 				<div className="mt-1 text-sm text-muted">
 					<span className={pending > 0 ? 'text-positive' : 'text-negative'}>
 						{pending > 0 ? `+${pending}` : pending}
@@ -174,18 +174,14 @@ const isRevealed = Boolean(player.revealed);
 			<div className="flex items-center gap-2 ml-4">
 				<button className="btn grid place-items-center h-12 w-12 text-2xl leading-none font-bold active:scale-95 select-none touch-manipulation [-webkit-touch-callout:none]" title="Tap: −1 · Hold: subtract more" {...decPress}>-</button>
 				<button className="btn grid place-items-center h-12 w-12 text-2xl leading-none font-bold active:scale-95 select-none touch-manipulation [-webkit-touch-callout:none]" title="Tap: +1 · Hold: add more" {...incPress}>+</button>
-				{hide ? (
-					<button
-						className={`grid place-items-center h-12 w-12 text-sm font-semibold active:scale-95 ` + (pending !== 0 ? 'btn' : 'opacity-0 pointer-events-none')}
-						onClick={() => pending !== 0 && dispatch({ type: 'applyPending', id: player.id })}
-						title="Apply pending"
-						aria-hidden={pending === 0}
-					>
-						{pending > 0 ? `+${pending}` : pending}
-					</button>
-				) : (
-					<button className="h-12 w-12 opacity-0 pointer-events-none" aria-hidden="true">+0</button>
-				)}
+				<button
+					className={`grid place-items-center h-12 w-12 text-sm font-semibold active:scale-95 ` + (pending !== 0 ? 'btn' : 'opacity-0 pointer-events-none')}
+					onClick={() => pending !== 0 && dispatch({ type: 'applyPending', id: player.id })}
+					title="Apply pending"
+					aria-hidden={pending === 0}
+				>
+					{pending > 0 ? `+${pending}` : pending}
+				</button>
 			</div>
 		</div>
 	);

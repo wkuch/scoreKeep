@@ -29,17 +29,11 @@ function createInitialState(): AppState {
 }
 
 function addToPlayer(state: AppState, id: string, amount: number): AppState {
-	if (state.hideTotals) {
-		return {
-			...state,
-			players: state.players.map((p) =>
-				p.id === id ? { ...p, pendingDelta: (p.pendingDelta ?? 0) + amount } : p
-			),
-		};
-	}
 	return {
 		...state,
-		players: state.players.map((p) => (p.id === id ? { ...p, score: p.score + amount } : p)),
+		players: state.players.map((p) =>
+			p.id === id ? { ...p, pendingDelta: (p.pendingDelta ?? 0) + amount } : p
+		),
 	};
 }
 
